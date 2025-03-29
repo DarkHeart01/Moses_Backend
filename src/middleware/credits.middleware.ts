@@ -4,6 +4,11 @@ import { logger } from '../services/logger.service';
 
 const prisma = new PrismaClient();
 
+function getErrorMessage(error: unknown): string {
+    if (error instanceof Error) return error.message;
+    return String(error);
+  }
+
 export const creditsMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   try {
     if (!req.user) {
@@ -37,7 +42,7 @@ export const creditsMiddleware = async (req: Request, res: Response, next: NextF
     
     next();
   } catch (error) {
-    logger.error(`Credits check error: ${error.message}`);
+    logger.error(`Credits check error: ${getErrorMessage(error)}`);
     return res.status(500).json({ error: 'Failed to check credits' });
   }
 };

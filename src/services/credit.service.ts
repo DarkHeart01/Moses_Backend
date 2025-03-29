@@ -3,6 +3,11 @@ import { logger } from './logger.service';
 
 const prisma = new PrismaClient();
 
+function getErrorMessage(error: unknown): string {
+    if (error instanceof Error) return getErrorMessage(error);
+    return String(error);
+  }
+
 export const creditService = {
   // Deduct credits from a user
   async deductCredit(userId: string, amount: number, description: string) {
@@ -35,7 +40,7 @@ export const creditService = {
       
       logger.info(`Deducted ${amount} credits from user ${userId} for: ${description}`);
     } catch (error) {
-      logger.error(`Failed to deduct credits: ${error.message}`);
+      logger.error(`Failed to deduct credits: ${getErrorMessage(error)}`);
       throw new Error('Failed to deduct credits');
     }
   },
@@ -59,7 +64,7 @@ export const creditService = {
       
       logger.info(`Added ${amount} credits to user ${userId} for: ${description}`);
     } catch (error) {
-      logger.error(`Failed to add credits: ${error.message}`);
+      logger.error(`Failed to add credits: ${getErrorMessage(error)}`);
       throw new Error('Failed to add credits');
     }
   },
@@ -78,7 +83,7 @@ export const creditService = {
       
       return user.credits;
     } catch (error) {
-      logger.error(`Failed to get credit balance: ${error.message}`);
+      logger.error(`Failed to get credit balance: ${getErrorMessage(error)}`);
       throw new Error('Failed to retrieve credit balance');
     }
   },
@@ -91,7 +96,7 @@ export const creditService = {
         orderBy: { timestamp: 'desc' }
       });
     } catch (error) {
-      logger.error(`Failed to get credit history: ${error.message}`);
+      logger.error(`Failed to get credit history: ${getErrorMessage(error)}`);
       throw new Error('Failed to retrieve credit history');
     }
   }

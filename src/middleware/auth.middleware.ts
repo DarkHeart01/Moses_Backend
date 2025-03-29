@@ -6,6 +6,11 @@ import { logger } from '../services/logger.service';
 const prisma = new PrismaClient();
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
+function getErrorMessage(error: unknown): string {
+    if (error instanceof Error) return getErrorMessage(error);
+    return String(error);
+  }
+
 interface JwtPayload {
   userId: string;
   email: string;
@@ -59,7 +64,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
     
     next();
   } catch (error) {
-    logger.error(`Authentication error: ${error.message}`);
+    logger.error(`Authentication error: ${getErrorMessage(error)}`);
     
     if (error instanceof jwt.JsonWebTokenError) {
       return res.status(401).json({ error: 'Unauthorized - Invalid token' });
@@ -91,7 +96,7 @@ export const adminMiddleware = async (req: Request, res: Response, next: NextFun
     
     next();
   } catch (error) {
-    logger.error(`Admin authorization error: ${error.message}`);
+    logger.error(`Admin authorization error: ${getErrorMessage(error)}`);
     return res.status(500).json({ error: 'Internal server error during authorization' });
   }
 };

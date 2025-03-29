@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { PrismaClient } from '@prisma/client';
 import { emailService } from '../services/email.service';
@@ -7,6 +7,11 @@ import { logger } from '../services/logger.service';
 
 const prisma = new PrismaClient();
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+
+function getErrorMessage(error: unknown): string {
+    if (error instanceof Error) return error.message;
+    return String(error);
+  }
 
 export const authController = {
   // User signup
@@ -55,7 +60,7 @@ export const authController = {
         message: 'User created successfully. Please verify your email.' 
       });
     } catch (error) {
-      logger.error(`Signup error: ${error.message}`);
+      logger.error(`Signup error: ${getErrorMessage(error)}`);
       res.status(500).json({ error: 'Failed to create user account' });
     }
   },
@@ -76,7 +81,7 @@ export const authController = {
       
       res.status(200).json({ message: 'Email verified successfully' });
     } catch (error) {
-      logger.error(`Verification error: ${error.message}`);
+      logger.error(`Verification error: ${getErrorMessage(error)}`);
       
       if (error instanceof jwt.TokenExpiredError) {
         return res.status(400).json({ error: 'Verification link has expired' });
@@ -137,7 +142,7 @@ export const authController = {
         }
       });
     } catch (error) {
-      logger.error(`Login error: ${error.message}`);
+      logger.error(`Login error: ${getErrorMessage(error)}`);
       res.status(500).json({ error: 'Failed to authenticate user' });
     }
   },
@@ -178,7 +183,7 @@ export const authController = {
       
       res.status(200).json({ message: 'Verification email has been sent' });
     } catch (error) {
-      logger.error(`Resend verification error: ${error.message}`);
+      logger.error(`Resend verification error: ${getErrorMessage(error)}`);
       res.status(500).json({ error: 'Failed to resend verification email' });
     }
   }

@@ -6,6 +6,11 @@ import { logger } from '../services/logger.service';
 
 const prisma = new PrismaClient();
 
+function getErrorMessage(error: unknown): string {
+    if (error instanceof Error) return error.message;
+    return String(error);
+  }
+
 export const userController = {
   // Get user profile
   async getProfile(req: Request, res: Response) {
@@ -30,7 +35,7 @@ export const userController = {
       
       res.status(200).json(user);
     } catch (error) {
-      logger.error(`Error getting user profile: ${error.message}`);
+      logger.error(`Error getting user profile: ${getErrorMessage(error)}`);
       res.status(500).json({ error: 'Failed to retrieve user profile' });
     }
   },
@@ -59,7 +64,7 @@ export const userController = {
       
       res.status(200).json(updatedUser);
     } catch (error) {
-      logger.error(`Error updating user profile: ${error.message}`);
+      logger.error(`Error updating user profile: ${getErrorMessage(error)}`);
       res.status(500).json({ error: 'Failed to update user profile' });
     }
   },
@@ -73,7 +78,7 @@ export const userController = {
       
       res.status(200).json({ credits });
     } catch (error) {
-      logger.error(`Error getting user credits: ${error.message}`);
+      logger.error(`Error getting user credits: ${getErrorMessage(error)}`);
       res.status(500).json({ error: 'Failed to retrieve credit balance' });
     }
   },
@@ -87,7 +92,7 @@ export const userController = {
       
       res.status(200).json(history);
     } catch (error) {
-      logger.error(`Error getting credit history: ${error.message}`);
+      logger.error(`Error getting credit history: ${getErrorMessage(error)}`);
       res.status(500).json({ error: 'Failed to retrieve credit history' });
     }
   },
@@ -123,7 +128,7 @@ export const userController = {
       
       res.status(200).json(sessionsWithDuration);
     } catch (error) {
-      logger.error(`Error getting session history: ${error.message}`);
+      logger.error(`Error getting session history: ${getErrorMessage(error)}`);
       res.status(500).json({ error: 'Failed to retrieve session history' });
     }
   }

@@ -3,6 +3,11 @@ import { logger } from './logger.service';
 
 const prisma = new PrismaClient();
 
+function getErrorMessage(error: unknown): string {
+    if (error instanceof Error) return getErrorMessage(error);
+    return String(error);
+  }
+
 export const sessionService = {
   // Create a new session
   async createSession(userId: string, osType: string) {
@@ -16,7 +21,7 @@ export const sessionService = {
         }
       });
     } catch (error) {
-      logger.error(`Failed to create session: ${error.message}`);
+      logger.error(`Failed to create session: ${getErrorMessage(error)}`);
       throw new Error('Failed to create lab session');
     }
   },
@@ -31,7 +36,7 @@ export const sessionService = {
         }
       });
     } catch (error) {
-      logger.error(`Failed to get active session: ${error.message}`);
+      logger.error(`Failed to get active session: ${getErrorMessage(error)}`);
       throw new Error('Failed to retrieve active session');
     }
   },
@@ -46,7 +51,7 @@ export const sessionService = {
         }
       });
     } catch (error) {
-      logger.error(`Failed to get session by ID: ${error.message}`);
+      logger.error(`Failed to get session by ID: ${getErrorMessage(error)}`);
       throw new Error('Failed to retrieve session');
     }
   },
@@ -59,7 +64,7 @@ export const sessionService = {
         data: { status }
       });
     } catch (error) {
-      logger.error(`Failed to update session status: ${error.message}`);
+      logger.error(`Failed to update session status: ${getErrorMessage(error)}`);
       throw new Error('Failed to update session status');
     }
   },
@@ -75,7 +80,7 @@ export const sessionService = {
         }
       });
     } catch (error) {
-      logger.error(`Failed to log session activity: ${error.message}`);
+      logger.error(`Failed to log session activity: ${getErrorMessage(error)}`);
       // Don't throw here, just log the error
     }
   },
@@ -94,7 +99,7 @@ export const sessionService = {
       await this.updateSessionStatus(sessionId, 'error');
       await this.logSessionActivity(sessionId, 'error', 'Session encountered an error');
     } catch (error) {
-      logger.error(`Failed to mark session as error: ${error.message}`);
+      logger.error(`Failed to mark session as error: ${getErrorMessage(error)}`);
     }
   }
 };

@@ -6,6 +6,11 @@ import { logger } from '../services/logger.service';
 
 const prisma = new PrismaClient();
 
+function getErrorMessage(error: unknown): string {
+    if (error instanceof Error) return error.message;
+    return String(error);
+  }
+
 export const adminController = {
   // Get all users
   async getUsers(req: Request, res: Response) {
@@ -60,7 +65,10 @@ export const adminController = {
         }
       });
     } catch (error) {
-      logger.error(`Error getting users: ${error.message}`);
+        if (error instanceof Error) {
+            console.log(error.message);
+          }
+      logger.error(`Error getting users: ${getErrorMessage(error)}`);
       res.status(500).json({ error: 'Failed to retrieve users' });
     }
   },
@@ -114,7 +122,7 @@ export const adminController = {
         creditTransactions
       });
     } catch (error) {
-      logger.error(`Error getting user details: ${error.message}`);
+      logger.error(`Error getting user details: ${getErrorMessage(error)}`);
       res.status(500).json({ error: 'Failed to retrieve user details' });
     }
   },
@@ -156,7 +164,7 @@ export const adminController = {
         user: updatedUser
       });
     } catch (error) {
-      logger.error(`Error adding credits: ${error.message}`);
+      logger.error(`Error adding credits: ${getErrorMessage(error)}`);
       res.status(500).json({ error: 'Failed to add credits' });
     }
   },
@@ -210,7 +218,7 @@ export const adminController = {
         }
       });
     } catch (error) {
-      logger.error(`Error getting all sessions: ${error.message}`);
+      logger.error(`Error getting all sessions: ${getErrorMessage(error)}`);
       res.status(500).json({ error: 'Failed to retrieve sessions' });
     }
   },
@@ -242,7 +250,7 @@ export const adminController = {
       
       res.status(200).json(session);
     } catch (error) {
-      logger.error(`Error getting session details: ${error.message}`);
+      logger.error(`Error getting session details: ${getErrorMessage(error)}`);
       res.status(500).json({ error: 'Failed to retrieve session details' });
     }
   },
@@ -270,7 +278,7 @@ export const adminController = {
       
       res.status(200).json({ message: 'Session terminated successfully' });
     } catch (error) {
-      logger.error(`Error terminating session: ${error.message}`);
+      logger.error(`Error terminating session: ${getErrorMessage(error)}`);
       res.status(500).json({ error: 'Failed to terminate session' });
     }
   },
@@ -319,7 +327,7 @@ export const adminController = {
         }
       });
     } catch (error) {
-      logger.error(`Error getting system logs: ${error.message}`);
+      logger.error(`Error getting system logs: ${getErrorMessage(error)}`);
       res.status(500).json({ error: 'Failed to retrieve system logs' });
     }
   },
@@ -396,7 +404,7 @@ export const adminController = {
         recentActivity: recentSessions
       });
     } catch (error) {
-      logger.error(`Error getting system stats: ${error.message}`);
+      logger.error(`Error getting system stats: ${getErrorMessage(error)}`);
       res.status(500).json({ error: 'Failed to retrieve system statistics' });
     }
   }

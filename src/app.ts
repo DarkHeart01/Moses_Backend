@@ -4,7 +4,7 @@ import helmet from 'helmet';
 import compression from 'compression';
 import { errorMiddleware } from './middleware/error.middleware';
 import { loggingMiddleware } from './middleware/logging.middleware';
-import routes from './routes';
+import routes from './routes/index';
 import { logger } from './services/logger.service';
 
 // Initialize express app

@@ -1,6 +1,11 @@
 import nodemailer from 'nodemailer';
 import { logger } from './logger.service';
 
+function getErrorMessage(error: unknown): string {
+    if (error instanceof Error) return getErrorMessage(error);
+    return String(error);
+  }
+
 // Configure email transporter
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST || 'smtp.gmail.com',
@@ -44,7 +49,7 @@ export const emailService = {
       await transporter.sendMail(mailOptions);
       logger.info(`Verification email sent to ${email}`);
     } catch (error) {
-      logger.error(`Failed to send verification email: ${error.message}`);
+      logger.error(`Failed to send verification email: ${getErrorMessage(error)}`);
       throw new Error('Failed to send verification email');
     }
   },
@@ -80,7 +85,7 @@ export const emailService = {
       await transporter.sendMail(mailOptions);
       logger.info(`Session expiration notification sent to ${email}`);
     } catch (error) {
-      logger.error(`Failed to send session expiration notification: ${error.message}`);
+      logger.error(`Failed to send session expiration notification: ${getErrorMessage(error)}`);
       // Don't throw here, just log the error
     }
   }

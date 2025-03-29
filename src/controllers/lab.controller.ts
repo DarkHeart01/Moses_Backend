@@ -8,6 +8,11 @@ import { logger } from '../services/logger.service';
 
 const prisma = new PrismaClient();
 
+function getErrorMessage(error: unknown): string {
+    if (error instanceof Error) return error.message;
+    return String(error);
+  }
+
 export const labController = {
   // Start a new lab session
   async startLabSession(req: Request, res: Response) {
@@ -32,7 +37,7 @@ export const labController = {
           logger.info(`VM provisioned for session ${session.id}`);
         })
         .catch(error => {
-          logger.error(`Failed to provision VM for session ${session.id}: ${error.message}`);
+          logger.error(`Failed to provision VM for session ${session.id}: ${getErrorMessage(error)}`);
           sessionService.markSessionError(session.id);
         });
       
@@ -42,7 +47,7 @@ export const labController = {
         status: 'provisioning'
       });
     } catch (error) {
-      logger.error(`Error starting lab session: ${error.message}`);
+      logger.error(`Error starting lab session: ${getErrorMessage(error)}`);
       return res.status(500).json({ error: 'Failed to start lab session' });
     }
   },
@@ -75,7 +80,7 @@ export const labController = {
         connectionUrl
       });
     } catch (error) {
-      logger.error(`Error getting active session: ${error.message}`);
+      logger.error(`Error getting active session: ${getErrorMessage(error)}`);
       return res.status(500).json({ error: 'Failed to get active session' });
     }
   },
@@ -112,7 +117,7 @@ export const labController = {
       
       return res.status(200).json({ connectionUrl });
     } catch (error) {
-      logger.error(`Error connecting to session: ${error.message}`);
+      logger.error(`Error connecting to session: ${getErrorMessage(error)}`);
       return res.status(500).json({ error: 'Failed to connect to session' });
     }
   },
@@ -142,7 +147,7 @@ export const labController = {
       
       return res.status(200).json({ message: 'Session terminated successfully' });
     } catch (error) {
-      logger.error(`Error terminating session: ${error.message}`);
+      logger.error(`Error terminating session: ${getErrorMessage(error)}`);
       return res.status(500).json({ error: 'Failed to terminate session' });
     }
   },
@@ -170,7 +175,7 @@ export const labController = {
           : 0
       });
     } catch (error) {
-      logger.error(`Error getting session status: ${error.message}`);
+      logger.error(`Error getting session status: ${getErrorMessage(error)}`);
       return res.status(500).json({ error: 'Failed to get session status' });
     }
   }

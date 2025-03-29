@@ -3,6 +3,11 @@ import { createHmac } from 'crypto';
 import { logger } from './logger.service';
 import { guacamoleConfig } from '../config/guacamole';
 
+function getErrorMessage(error: unknown): string {
+    if (error instanceof Error) return getErrorMessage(error);
+    return String(error);
+  }
+
 export const guacamoleService = {
   // Get authentication token for Guacamole API
   async getAuthToken() {
@@ -20,7 +25,7 @@ export const guacamoleService = {
       
       return response.data.authToken;
     } catch (error) {
-      logger.error(`Failed to get Guacamole auth token: ${error.message}`);
+      logger.error(`Failed to get Guacamole auth token: ${getErrorMessage(error)}`);
       throw new Error('Failed to authenticate with Guacamole');
     }
   },
@@ -65,7 +70,7 @@ export const guacamoleService = {
       
       return response.data.identifier;
     } catch (error) {
-      logger.error(`Failed to create Guacamole connection: ${error.message}`);
+      logger.error(`Failed to create Guacamole connection: ${getErrorMessage(error)}`);
       throw new Error('Failed to create remote desktop connection');
     }
   },
@@ -97,7 +102,7 @@ export const guacamoleService = {
       
       return true;
     } catch (error) {
-      logger.error(`Failed to delete Guacamole connection: ${error.message}`);
+      logger.error(`Failed to delete Guacamole connection: ${getErrorMessage(error)}`);
       throw new Error('Failed to clean up remote desktop connection');
     }
   }

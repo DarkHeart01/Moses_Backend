@@ -11,6 +11,11 @@ const compute = new Compute({
   keyFilename: gcpConfig.keyFilePath
 });
 
+function getErrorMessage(error: unknown): string {
+    if (error instanceof Error) return getErrorMessage(error);
+    return String(error);
+  }
+
 export const gcpService = {
   // Provision a VM asynchronously
   async provisionVMAsync(sessionId: string, osType: string) {
@@ -40,7 +45,7 @@ export const gcpService = {
       
       return result;
     } catch (error) {
-      logger.error(`Failed to provision VM for session ${sessionId}: ${error.message}`);
+      logger.error(`Failed to provision VM for session ${sessionId}: ${getErrorMessage(error)}`);
       
       // Update session status to error
       await sessionService.updateSessionStatus(sessionId, 'error');
@@ -49,7 +54,7 @@ export const gcpService = {
       await sessionService.logSessionActivity(
         sessionId,
         'error',
-        `Failed to provision VM: ${error.message}`
+        `Failed to provision VM: ${getErrorMessage(error)}`
       );
       
       throw error;
@@ -148,7 +153,7 @@ export const gcpService = {
         
         return true;
       } catch (error) {
-        logger.error(`Failed to terminate VM for session ${sessionId}: ${error.message}`);
+        logger.error(`Failed to terminate VM for session ${sessionId}: ${getErrorMessage(error)}`);
         throw new Error('Failed to terminate lab environment');
       }
     },
