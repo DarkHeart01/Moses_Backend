@@ -1,12 +1,12 @@
 import { Router } from 'express';
 import { userController } from '../controllers/user.controller';
-import authMiddleware from '../middleware/auth.middleware';
+import { authMiddleware } from '../middleware/auth.middleware';
 import { asyncHandler } from '../utils/asyncHandler';
 
 const router = Router();
 
 // Apply auth middleware to all user routes
-router.use(authMiddleware);
+router.use(asyncHandler(authMiddleware));
 
 // User profile routes
 router.get('/profile', asyncHandler(userController.getProfile));

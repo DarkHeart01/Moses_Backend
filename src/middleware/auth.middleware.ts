@@ -101,6 +101,5 @@ export const adminMiddleware = async (req: Request, res: Response, next: NextFun
   }
 };
 
-export default authMiddleware;
 
 

@@ -115,10 +115,16 @@ export const userController = {
       });
       
       // Calculate duration for each session
-      const sessionsWithDuration = sessions.map(session => {
+      const sessionsWithDuration = sessions.map((session: {
+        id: string;
+        osType: string;
+        startTime: Date;
+        endTime: Date | null;
+        status: string;
+      }) => {
         const endTime = session.endTime || new Date();
         const durationMs = endTime.getTime() - session.startTime.getTime();
-        const duration = Math.floor(durationMs / (60 * 1000)); // Duration in minutes
+        const duration = Math.floor(durationMs / (60 * 1000)); 
         
         return {
           ...session,

@@ -7,12 +7,12 @@ import { asyncHandler } from '../utils/asyncHandler';
 const router = Router();
 
 // Apply auth middleware to all lab routes
-router.use(authMiddleware);
+router.use(asyncHandler(authMiddleware));
 
 // Start a new lab session
 router.post(
   '/start',
-  creditsMiddleware,
+  asyncHandler(creditsMiddleware),
   asyncHandler(labController.startLabSession)
 );
 

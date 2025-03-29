@@ -1,15 +1,17 @@
-import { Compute } from '@google-cloud/compute';
 import { PrismaClient } from '@prisma/client';
 import { logger } from './logger.service';
 import { gcpConfig } from '../config/gcp';
 import { guacamoleService } from './guacamole.service';
 import { sessionService } from './session.service';
 
+const Compute = require('@google-cloud/compute');
+
 const prisma = new PrismaClient();
 const compute = new Compute({
   projectId: gcpConfig.projectId,
   keyFilename: gcpConfig.keyFilePath
 });
+
 
 function getErrorMessage(error: unknown): string {
     if (error instanceof Error) return getErrorMessage(error);

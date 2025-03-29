@@ -9,7 +9,6 @@ function getErrorMessage(error: unknown): string {
   }
 
 export const guacamoleService = {
-  // Get authentication token for Guacamole API
   async getAuthToken() {
     try {
       const response = await axios.post(
@@ -46,7 +45,6 @@ export const guacamoleService = {
         parameters: {
           hostname: vmIp,
           port,
-          password: guacamoleConfig.vncPassword,
           'security': 'none',
           'ignore-cert': 'true'
         },

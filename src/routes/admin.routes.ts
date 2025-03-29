@@ -1,13 +1,12 @@
 import { Router } from 'express';
 import { adminController } from '../controllers/admin.controller';
-import { adminMiddleware } from '../middleware/auth.middleware'; 
-import authMiddleware from '../middleware/auth.middleware'; 
+import { adminMiddleware, authMiddleware } from '../middleware/auth.middleware'; 
 import { asyncHandler } from '../utils/asyncHandler';
 
 const router = Router();
 
-router.use(authMiddleware);
-router.use(adminMiddleware);
+router.use(asyncHandler(authMiddleware));
+router.use(asyncHandler(adminMiddleware));
 
 router.get('/users', asyncHandler(adminController.getUsers));
 router.get('/users/:userId', asyncHandler(adminController.getUserDetails));
