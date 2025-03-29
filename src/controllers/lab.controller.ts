@@ -17,7 +17,7 @@ export const labController = {
   // Start a new lab session
   async startLabSession(req: Request, res: Response) {
     const { osType } = req.body;
-    const userId = req.user.id;
+    const userId = req.user!.id;
     
     // Validate OS type
     if (!['Ubuntu', 'Rocky Linux', 'OpenSUSE'].includes(osType)) {
@@ -54,7 +54,7 @@ export const labController = {
   
   // Get active session for user
   async getActiveSession(req: Request, res: Response) {
-    const userId = req.user.id;
+    const userId = req.user!.id;
     
     try {
       const session = await sessionService.getActiveSessionForUser(userId);
@@ -88,7 +88,7 @@ export const labController = {
   // Connect to an existing session
   async connectToSession(req: Request, res: Response) {
     const { sessionId } = req.params;
-    const userId = req.user.id;
+    const userId = req.user!.id;
     
     try {
       // Verify session belongs to user and is active
@@ -125,7 +125,7 @@ export const labController = {
   // Terminate a session
   async terminateSession(req: Request, res: Response) {
     const { sessionId } = req.params;
-    const userId = req.user.id;
+    const userId = req.user!.id;
     
     try {
       // Verify session belongs to user
@@ -155,7 +155,7 @@ export const labController = {
   // Get session status
   async getSessionStatus(req: Request, res: Response) {
     const { sessionId } = req.params;
-    const userId = req.user.id;
+    const userId = req.user!.id;
     
     try {
       const session = await sessionService.getSessionById(sessionId, userId);
