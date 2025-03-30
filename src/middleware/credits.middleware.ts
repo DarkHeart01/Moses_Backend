@@ -1,8 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '../../prisma/client';
 import { logger } from '../services/logger.service';
-
-const prisma = new PrismaClient();
+import prisma from "../lib/prisma";
 
 function getErrorMessage(error: unknown): string {
     if (error instanceof Error) return error.message;

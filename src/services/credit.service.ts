@@ -1,7 +1,6 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '../../prisma/client';
 import { logger } from './logger.service';
-
-const prisma = new PrismaClient();
+import prisma from "../lib/prisma";
 
 function getErrorMessage(error: unknown): string {
     if (error instanceof Error) return getErrorMessage(error);

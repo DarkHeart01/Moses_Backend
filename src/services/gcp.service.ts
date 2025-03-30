@@ -1,12 +1,12 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '../../prisma/client';
 import { logger } from './logger.service';
 import { gcpConfig } from '../config/gcp';
 import { guacamoleService } from './guacamole.service';
 import { sessionService } from './session.service';
+import prisma from "../lib/prisma";
 
 const Compute = require('@google-cloud/compute');
 
-const prisma = new PrismaClient();
 const compute = new Compute({
   projectId: gcpConfig.projectId,
   keyFilename: gcpConfig.keyFilePath
